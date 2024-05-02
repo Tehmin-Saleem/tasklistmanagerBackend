@@ -1,11 +1,18 @@
 // userController.js
 const User = require("../models/userModel");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 // Get all users
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await User.find();
-    res.json(users);
+    if (req.adminPrevillageEmail === "HammadAwanexample.com") {
+      // Find the user by email
+      const users = await User.find();
+      return res.json(users);
+    }
+
+    res.json({ message: "Beta ap ky pass admin creds nahii hai" });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -27,13 +34,60 @@ exports.getUserById = async (req, res) => {
 
 // Create a new user
 exports.createUser = async (req, res) => {
-  const user = new User(req.body);
+  const { name, email, phoneNumber, password } = req.body;
 
   try {
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+    // Create a new user instance with hashed password
+    const user = new User({
+      name,
+      email,
+      phoneNumber,
+      password: hashedPassword,
+      pendingNotifications: [],
+      status: "Pending",
+    });
+
+    // Save the user to the database
     const newUser = await user.save();
     res.status(201).json(newUser);
   } catch (err) {
     res.status(400).json({ message: err.message });
+  }
+};
+
+exports.loginUser = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    // Find the user by email
+    const user = await User.findOne({ email });
+
+    // If user is not found, return 404
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Compare passwords
+    const passwordMatch = await bcrypt.compare(password, user.password);
+
+    // If passwords match, generate JWT token
+    if (passwordMatch) {
+      const token = jwt.sign(
+        { userId: user._id, email: user.email },
+        "your-secret-key-youcanothackme2232323@*#*###",
+        {
+          expiresIn: "1h",
+        }
+      );
+      return res.json({ token });
+    } else {
+      // If passwords don't match, return 401 Unauthorized
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
 
@@ -42,7 +96,7 @@ exports.updateUser = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
     if (user) {
-      user.username = req.body.username || user.username;
+      user.name = req.body.name || user.name;
       user.email = req.body.email || user.email;
       // Update other user properties here
 
