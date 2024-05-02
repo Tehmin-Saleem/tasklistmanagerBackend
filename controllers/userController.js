@@ -42,8 +42,13 @@ exports.updateUser = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
     if (user) {
-      user.username = req.body.username || user.username;
-      user.email = req.body.email || user.email;
+      // user.username = req.body.username || user.username;
+      // user.email = req.body.email || user.email;
+      user.customerName = req.body.customerName || user.customerName;
+      user.projectName = req.body.projectName || user.projectName;
+      user.startDate = req.body.startDate || user.startDate;
+      user.endDate = req.body.endDate || user.endDate;
+      user.overdueDays = req.body.overdueDays || user.overdueDays;
       // Update other user properties here
 
       const updatedUser = await user.save();
@@ -55,6 +60,7 @@ exports.updateUser = async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 };
+
 
 // Delete a user by ID
 exports.deleteUser = async (req, res) => {

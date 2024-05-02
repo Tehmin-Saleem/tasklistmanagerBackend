@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const connectDB = async () => {
   try {
     const conn = await mongoose.connect(
-      "mongodb+srv://putyourusername:passsaword.youruniqueregionconnectionstring.mongodb.net/myapp",
+      "mongodb://localhost:27017/mernapp",
       {
         useNewUrlParser: true,
         useUnifiedTopology: true,
