@@ -5,15 +5,16 @@ const taskController = require("../controllers/taskController");
 // Get all tasks
 router.get("/", taskController.getAllTasks);
 
-// Get a single task by ID
-router.get("/:id", taskController.getTaskById);
+// Get a single task by title
+router.get("/:title", taskController.getTaskByTitle);
 
 // Create a new task
 router.post("/", taskController.createTask);
 
-// Update a task by ID
-router.put("/:id", taskController.updateTask);
+// Update a task by title
+router.patch("/:title", taskController.updateTaskByTitle);
 
-// Delete a task by ID
-router.delete("/:id", taskController.deleteTask);
+// Delete a task by title
+router.delete("/:title", taskController.deleteTaskByTitle);
+
 module.exports = router;

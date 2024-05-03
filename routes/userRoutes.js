@@ -1,20 +1,20 @@
 const express = require("express");
 const router = express.Router();
-const userController = require("../controllers/userController");
+const notificationController = require("../controllers/notificationController");
 
-// Get all users
-router.get("/", userController.getAllUsers);
+// Get all notifications
+router.get("/", notificationController.getAllNotifications);
 
-// Get a single user by ID
-router.get("/:id", userController.getUserById);
+// Get a single notification by user_id
+router.get("/:user_id", notificationController.getNotificationByUserId);
 
-// Create a new user
-router.post("/", userController.createUser);
+// Create a new notification
+router.post("/", notificationController.createNotification);
 
-// Update a user by ID
-router.put("/:id", userController.updateUser);
+// Update a notification by user_id
+router.patch("/:user_id", notificationController.updateNotificationByUserId);
 
-// Delete a user by ID
-router.delete("/:id", userController.deleteUser);
+// Delete a notification by user_id
+router.delete("/:user_id", notificationController.deleteNotificationByUserId);
 
 module.exports = router;

@@ -1,4 +1,3 @@
-// notificationController.js
 const Notification = require("../models/notificationModel");
 
 // Get all notifications
@@ -11,10 +10,11 @@ exports.getAllNotifications = async (req, res) => {
   }
 };
 
-// Get a single notification by ID
-exports.getNotificationById = async (req, res) => {
+// Get a single notification by user_id
+exports.getNotificationByUserId = async (req, res) => {
+  const { user_id } = req.params;
   try {
-    const notification = await Notification.findById(req.params.id);
+    const notification = await Notification.findOne({ user_id });
     if (notification) {
       res.json(notification);
     } else {

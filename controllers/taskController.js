@@ -1,4 +1,3 @@
-// taskController.js
 const Task = require("../models/taskModel");
 
 // Get all tasks
@@ -11,10 +10,11 @@ exports.getAllTasks = async (req, res) => {
   }
 };
 
-// Get a single task by ID
-exports.getTaskById = async (req, res) => {
+// Get a single task by title
+exports.getTaskByTitle = async (req, res) => {
+  const { title } = req.params;
   try {
-    const task = await Task.findById(req.params.id);
+    const task = await Task.findOne({ title });
     if (task) {
       res.json(task);
     } else {
@@ -27,10 +27,14 @@ exports.getTaskById = async (req, res) => {
 
 // Create a new task
 exports.createTask = async (req, res) => {
+  const { title, description, status, attachment, startDate, endDate } = req.body;
   const task = new Task({
-    title: req.body.title,
-    description: req.body.description,
-    // Add other task properties here
+    title,
+    description,
+    status,
+    attachment,
+    startDate,
+    endDate,
   });
 
   try {
